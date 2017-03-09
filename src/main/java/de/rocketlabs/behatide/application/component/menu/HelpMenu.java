@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.menu;
 
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.application.component.dialog.AboutDialog;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

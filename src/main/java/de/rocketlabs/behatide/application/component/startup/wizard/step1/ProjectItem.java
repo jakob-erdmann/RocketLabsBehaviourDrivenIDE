@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.startup.wizard.step1;
 
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.domain.model.ProjectType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

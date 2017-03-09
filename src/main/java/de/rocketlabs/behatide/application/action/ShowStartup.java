@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ShowStartup extends FxCapableAction {
+public class ShowStartup extends AbstractAction {
 
     @Override
     public void doAction() {

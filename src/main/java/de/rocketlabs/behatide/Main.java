@@ -4,12 +4,14 @@ import de.rocketlabs.behatide.application.IdeApplication;
 import de.rocketlabs.behatide.application.action.ActionRunner;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.fx.ApplicationParameterBuilderFactory;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     public static void main(String[] args) {
+        ApplicationParameterBuilderFactory.getInstance().setArgs(args);
         launch(args);
     }
 

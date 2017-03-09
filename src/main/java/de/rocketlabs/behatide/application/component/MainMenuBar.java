@@ -1,5 +1,6 @@
 package de.rocketlabs.behatide.application.component;
 
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.application.model.ProjectContext;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

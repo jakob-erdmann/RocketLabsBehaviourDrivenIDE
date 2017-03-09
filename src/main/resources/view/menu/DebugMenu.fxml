@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.menu.DebugMenu?>
+<?import javafx.scene.control.MenuItem?>
+
+<fx:root type="DebugMenu" xmlns:fx="http://javafx.com/fxml">
+    <MenuItem text="Endless Action" onAction="#runEndlessAction"/>
+</fx:root>

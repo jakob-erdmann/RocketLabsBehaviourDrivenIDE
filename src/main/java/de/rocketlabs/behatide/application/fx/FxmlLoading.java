@@ -1,4 +1,4 @@
-package de.rocketlabs.behatide.application.component;
+package de.rocketlabs.behatide.application.fx;
 
 import de.rocketlabs.behatide.application.component.exception.FxmlLoadException;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +18,7 @@ public interface FxmlLoading<T> {
     }
 
     default T loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(getFxmlPath()));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(getFxmlPath()), null, ApplicationParameterBuilderFactory.getInstance());
         if (getRoot() != null) {
             fxmlLoader.setRoot(getRoot());
         }

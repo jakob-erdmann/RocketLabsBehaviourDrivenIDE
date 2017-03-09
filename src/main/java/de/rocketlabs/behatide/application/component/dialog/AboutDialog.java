@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.dialog;
 
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Popup;

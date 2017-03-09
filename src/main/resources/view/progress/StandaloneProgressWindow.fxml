@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.progress.StandaloneProgressWindow?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.ListView?>
+<fx:root type="de.rocketlabs.behatide.application.component.progress.StandaloneProgressWindow" xmlns:fx="http://javafx.com/fxml">
+    <scene>
+        <Scene>
+            <ListView fx:id="view"/>
+        </Scene>
+    </scene>
+</fx:root>

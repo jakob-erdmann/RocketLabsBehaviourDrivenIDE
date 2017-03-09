@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.widget;
 
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.application.component.SuiteSelectionChangedEvent;
 import de.rocketlabs.behatide.application.component.control.FileTreeCell;
 import de.rocketlabs.behatide.application.component.control.FileTreeItem;

@@ -41,7 +41,17 @@ public class ActionRunner {
 
         @Override
         protected <T extends Action> void handleTask(T task) {
+            beforeTask(task);
             task.doAction();
+            afterTask(task);
+        }
+
+        private <T extends Action> void beforeTask(T task) {
+            ProgressManager.getInstance().addTask(task);
+        }
+
+        private <T extends Action> void afterTask(T task) {
+            ProgressManager.getInstance().removeTask(task);
         }
     }
 }

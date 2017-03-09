@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.startup.wizard;
 
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.application.component.IdeForm;
 import de.rocketlabs.behatide.application.component.startup.wizard.step1.ProjectItem;
 import de.rocketlabs.behatide.application.manager.modules.ModuleManager;

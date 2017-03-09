@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OpenProject extends FxCapableAction {
+public class OpenProject extends AbstractAction {
 
     private final StateStorageManager storageManager;
     private final ModuleManager moduleManager;

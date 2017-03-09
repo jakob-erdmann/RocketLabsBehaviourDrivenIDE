@@ -1,5 +1,6 @@
 package de.rocketlabs.behatide.application.editor.action;
 
+import de.rocketlabs.behatide.application.action.AbstractAction;
 import de.rocketlabs.behatide.application.action.Action;
 import de.rocketlabs.behatide.application.model.ProjectContext;
 import javafx.scene.control.Alert;
@@ -9,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public class SaveFile implements Action {
+public class SaveFile extends AbstractAction {
 
     private ProjectContext projectContext;
 

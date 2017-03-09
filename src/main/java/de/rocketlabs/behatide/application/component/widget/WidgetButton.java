@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.widget;
 
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;

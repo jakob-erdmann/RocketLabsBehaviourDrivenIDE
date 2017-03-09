@@ -6,6 +6,7 @@ import de.rocketlabs.behatide.application.component.widget.ConsoleWidget;
 import de.rocketlabs.behatide.application.editor.component.Editor;
 import de.rocketlabs.behatide.application.editor.event.ProfileSelectionChangedEvent;
 import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.application.manager.modules.ModuleManager;
 import de.rocketlabs.behatide.application.model.ProjectContext;
 import de.rocketlabs.behatide.domain.model.Configuration;
@@ -23,7 +24,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.nio.file.Path;
 
-public class EditorView extends BorderPane implements FxmlLoading {
+public class EditorView extends BorderPane implements FxmlLoading<BorderPane> {
 
     @FXML
     private ConsoleWidget consoleWidget;

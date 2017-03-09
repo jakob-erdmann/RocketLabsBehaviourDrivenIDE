@@ -3,8 +3,10 @@
 <?import de.rocketlabs.behatide.application.component.MainMenuBar?>
 <?import de.rocketlabs.behatide.application.component.menu.FileMenu?>
 <?import de.rocketlabs.behatide.application.component.menu.HelpMenu?>
+<?import de.rocketlabs.behatide.application.component.menu.DebugMenu?>
 <fx:root fx:id="menuBar" type="de.rocketlabs.behatide.application.component.MainMenuBar"
          xmlns:fx="http://javafx.com/fxml">
-    <FileMenu scene="${menuBar.scene}" metaData="${menuBar.metaData}"/>
-    <HelpMenu scene="${menuBar.scene}" metaData="${menuBar.metaData}"/>
+    <FileMenu scene="${menuBar.scene}" projectContext="${menuBar.projectContext}"/>
+    <HelpMenu scene="${menuBar.scene}" projectContext="${menuBar.projectContext}"/>
+    <DebugMenu />
 </fx:root>

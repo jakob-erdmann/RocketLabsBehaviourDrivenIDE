@@ -6,4 +6,8 @@ package de.rocketlabs.behatide.application.action;
  */
 public interface Action {
     void doAction();
+
+    default AbstractAction.ProgressBar progressBar() {
+        return AbstractAction.ProgressBar.NONE;
+    }
 }

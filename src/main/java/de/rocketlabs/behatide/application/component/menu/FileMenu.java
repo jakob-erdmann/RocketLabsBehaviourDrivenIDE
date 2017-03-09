@@ -1,7 +1,7 @@
 package de.rocketlabs.behatide.application.component.menu;
 
 import de.rocketlabs.behatide.application.action.ActionRunner;
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.application.editor.action.SaveFile;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

@@ -1,5 +1,6 @@
 package de.rocketlabs.behatide.application;
 
+import com.google.inject.Guice;
 import de.rocketlabs.behatide.application.action.ActionRunner;
 import de.rocketlabs.behatide.application.action.ShowStartup;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;

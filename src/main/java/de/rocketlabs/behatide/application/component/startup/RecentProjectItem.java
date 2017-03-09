@@ -2,7 +2,7 @@ package de.rocketlabs.behatide.application.component.startup;
 
 import de.rocketlabs.behatide.application.action.ActionRunner;
 import de.rocketlabs.behatide.application.action.OpenProject;
-import de.rocketlabs.behatide.application.component.FxmlLoading;
+import de.rocketlabs.behatide.application.fx.FxmlLoading;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

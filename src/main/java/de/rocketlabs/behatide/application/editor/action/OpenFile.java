@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.editor.action;
 
-import de.rocketlabs.behatide.application.action.FxCapableAction;
+import de.rocketlabs.behatide.application.action.AbstractAction;
 import de.rocketlabs.behatide.application.editor.component.Editor;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class OpenFile extends FxCapableAction {
+public class OpenFile extends AbstractAction {
 
     private final File file;
     private final ProjectContext context;
