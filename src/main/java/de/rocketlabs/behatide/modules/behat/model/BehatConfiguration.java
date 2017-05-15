@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public final class BehatConfiguration implements Configuration {
+public final class BehatConfiguration implements Configuration<BehatProfile> {
 
     private Map<String, BehatProfile> profiles = new HashMap<>();
 
@@ -22,15 +22,12 @@ public final class BehatConfiguration implements Configuration {
     }
 
     @Override
-    public List<Profile> getProfiles() {
+    public List<BehatProfile> getProfiles() {
         return Collections.unmodifiableList(new LinkedList<>(profiles.values()));
     }
 
     @Override
-    public void addProfile(@NotNull Profile profile) {
-        if (!(profile instanceof BehatProfile)) {
-            throw new IllegalArgumentException("Profile must be of type BehatProfile");
-        }
-        profiles.put(profile.getName(), ((BehatProfile) profile));
+    public void addProfile(@NotNull BehatProfile profile) {
+        profiles.put(profile.getName(), profile);
     }
 }

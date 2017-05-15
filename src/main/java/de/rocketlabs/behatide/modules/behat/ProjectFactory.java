@@ -6,7 +6,6 @@ import de.rocketlabs.behatide.application.configuration.storage.StorageParameter
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.domain.parser.ConfigurationReader;
 import de.rocketlabs.behatide.modules.behat.model.BehatProfile;
-import de.rocketlabs.behatide.modules.behat.model.BehatSuite;
 import de.rocketlabs.behatide.modules.behat.model.Project;
 import de.rocketlabs.behatide.modules.behat.model.ProjectConfiguration;
 import de.rocketlabs.behatide.modules.behat.parser.BehatConfigurationReader;
@@ -22,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ProjectFactory {
@@ -37,9 +35,18 @@ public class ProjectFactory {
     private static BehatConfigurationReader configurationReader =
         (BehatConfigurationReader) injector.getInstance(ConfigurationReader.class);
 
+    public static void main(String... args) {
+        ProjectConfiguration projectConfiguration = new ProjectConfiguration();
+        projectConfiguration.setTitle("test");
+        projectConfiguration.setBehatConfigurationFile("/home/jerdmann/source/behat/dummy/behat.yml");
+        projectConfiguration.setBehatExecutable("/home/jerdmann/source/behat/dummy/vendor/behat/behat/bin/behat");
+        projectConfiguration.setProjectLocation("/home/jerdmann/source/java/RocketLabsBehaviourDrivenIDE/build");
+
+        generateProject(projectConfiguration);
+    }
+
     public static de.rocketlabs.behatide.domain.model.Project generateProject(ProjectConfiguration configuration) {
-        Project project = new de.rocketlabs.behatide.modules.behat.model
-            .Project();
+        Project project = new de.rocketlabs.behatide.modules.behat.model.Project();
         project.setProjectLocation(configuration.getProjectLocation());
         project.setBehatConfigurationFile(configuration.getBehatConfigurationFile());
         project.setBehatExecutablePath(configuration.getBehatExecutable());
@@ -76,61 +83,86 @@ public class ProjectFactory {
     }
 
     private static void loadBehatDefinitions(Project project, ProjectConfiguration configuration) {
-        Set<String> classesSet = buildClassSet(project);
-        Map<String, PhpFile> parsedFiles = loadPhpClasses(project, classesSet, configuration);
+        Set<String> classPaths = getClassPaths(project, configuration);
+        Map<String, PhpFile> parsedFiles = loadPhpClasses(classPaths);
         Map<String, PhpClass> behatDefinitions = getBehatDefinitions(parsedFiles);
         project.setAvailableDefinitions(behatDefinitions);
     }
 
-    private static Set<String> buildClassSet(Project project) {
+    private static Set<String> getClassPaths(Project project, ProjectConfiguration configuration) {
         Set<String> classesSet = new HashSet<>();
-        project.getConfiguration().getProfileNames().forEach(profileName -> {
-            BehatProfile profile = project.getConfiguration().getProfile(profileName);
-            profile.getSuiteNames().forEach(suiteName -> {
-                BehatSuite suite = profile.getSuite(suiteName);
-                classesSet.addAll(suite.getDefinitionContainerIdentifiers());
-            });
+
+        project.getConfiguration().getProfiles().forEach(profile -> {
+            resolveProfileClasses(project, profile, configuration);
+            classesSet.addAll(profile.getClassPaths().values());
         });
+
         return classesSet;
     }
 
-    private static Map<String, PhpFile> loadPhpClasses(Project project, Set<String> classesSet, ProjectConfiguration configuration) {
-        ProcessBuilder builder = configureProcessBuilder(classesSet, configuration);
-        Map<String, PhpFile> parsedFiles = new HashMap<>();
+    private static void resolveProfileClasses(Project project, BehatProfile profile, ProjectConfiguration configuration) {
+        Map<String, String> autoLoadPaths = profile.getAutoLoadPaths();
+        Set<String> profilesClasses = profile.getSuites().stream()
+                                             .flatMap(suite -> suite.getDefinitionContainerIdentifiers().stream())
+                                             .collect(Collectors.toSet());
+
+        ProcessBuilder autoLoader = configureProcessBuilder(autoLoadPaths, project, profilesClasses, configuration);
+
+        Map<String, String> classMap = new HashMap<>();
         try {
-            Process process = builder.start();
+            Process process = autoLoader.start();
             try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                for (String className : classesSet) {
+                for (String className : profilesClasses) {
                     String path = in.readLine();
-                    if (path == null) {
-                        break;
-                    }
-                    parsedFiles.put(className, PhpParser.parse(new FileInputStream(path)));
-                    setFileHash(project, path);
+                    classMap.put(className, path);
                 }
             }
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        profile.setClassPaths(classMap);
+    }
+
+    private static Map<String, PhpFile> loadPhpClasses(Set<String> classesSet) {
+        Map<String, PhpFile> parsedFiles = new HashMap<>();
+        classesSet.forEach(classPath -> {
+            try {
+                parsedFiles.put(classPath, PhpParser.parse(new FileInputStream(classPath)));
+            } catch (ParseException | FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
         return parsedFiles;
     }
 
     @NotNull
-    private static ProcessBuilder configureProcessBuilder(final Set<String> classesSet,
+    private static ProcessBuilder configureProcessBuilder(final Map<String, String> autoLoadPaths,
+                                                          Project project, final Collection<String> classesSet,
                                                           final ProjectConfiguration configuration) {
-        List<String> cmdList = new LinkedList<String>() {{
-            add("php");
-            add(Project.class.getResource("/php/loadClass.php").getFile());
-            add(getAutoloadPhpPath(configuration));
-            addAll(classesSet);
-        }};
+        String symfonyLoaderString = autoLoadPaths.entrySet().stream()
+                                                  .map(e -> e.getKey() + ":" + e.getValue())
+                                                  .collect(Collectors.joining(":"));
+
+        for (Map.Entry<String, String> replacement : project.getPathReplacements().entrySet()) {
+            symfonyLoaderString = symfonyLoaderString.replace(replacement.getKey(), replacement.getValue());
+        }
+        List<String> cmdList = new LinkedList<>();
+        cmdList.add("php");
+        cmdList.add(Project.class.getResource("/php/loadClass.php").getFile());
+        cmdList.add("-l");
+        cmdList.add(getComposerAutoloadPath(configuration));
+        cmdList.add("-p");
+        cmdList.add(symfonyLoaderString);
+        cmdList.addAll(classesSet);
+
         ProcessBuilder builder = new ProcessBuilder();
         builder.command(cmdList);
         return builder;
     }
 
     @NotNull
-    private static String getAutoloadPhpPath(ProjectConfiguration configuration) {
+    private static String getComposerAutoloadPath(ProjectConfiguration configuration) {
         File f = new File(configuration.getBehatExecutable());
         String parentPath = f.getParent();
 
@@ -145,18 +177,33 @@ public class ProjectFactory {
     }
 
     private static Map<String, PhpClass> getBehatDefinitions(Map<String, PhpFile> loadedPhpFiles) {
-        Function<Map.Entry<String, PhpFile>, PhpClass> findClass = entry -> {
-            PhpFile phpFile = entry.getValue();
-            for (PhpClass phpClass : phpFile.getClasses()) {
-                if (entry.getKey().equals('\\' + phpFile.getNamespace() + '\\' + phpClass.getName())) {
-                    return phpClass;
-                }
-            }
-            return null;
-        };
+//        Function<Map.Entry<String, PhpFile>, PhpClass> findClass = entry -> {
+//            PhpFile phpFile = entry.getValue();
+//            for (PhpClass phpClass : phpFile.getClasses()) {
+//                if (entry.getKey().equals('\\' + phpFile.getNamespace() + '\\' + phpClass.getName())) {
+//                    return phpClass;
+//                }
+//            }
+//            return null;
+//        };
 
-        return loadedPhpFiles.entrySet()
-            .stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, findClass));
+        Map<String, PhpClass> bla = loadedPhpFiles
+            .values().stream()
+            .flatMap(phpFile -> phpFile.getClasses().stream())
+            .collect(Collectors.toMap(phpClass -> phpClass.getName(), phpClass -> phpClass));
+
+
+        return loadedPhpFiles.values()
+                             .stream()
+                             .flatMap(phpFile -> {
+                                 phpFile.getClasses().stream();
+                                 Map<String, PhpClass> classMap = new HashMap<>();
+                                 for (PhpClass phpClass : phpFile.getClasses()) {
+                                     classMap.put(phpFile.getNamespace() + '\\' + phpClass.getName(), phpClass);
+                                 }
+                                 return classMap.entrySet().stream();
+                             })
+                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
 }

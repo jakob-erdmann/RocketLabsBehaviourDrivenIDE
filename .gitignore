@@ -36,3 +36,4 @@ src/main/java/de/rocketlabs/behatide/php/PhpParserTokenManager.java
 src/main/java/de/rocketlabs/behatide/php/SimpleCharStream.java
 src/main/java/de/rocketlabs/behatide/php/Token.java
 src/main/java/de/rocketlabs/behatide/php/TokenMgrError.java
+src/main/resources/php/vendor/

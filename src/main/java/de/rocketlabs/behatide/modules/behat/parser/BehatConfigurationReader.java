@@ -29,12 +29,12 @@ public final class BehatConfigurationReader implements ConfigurationReader<Behat
             Object data = reader.read();
             data = mergeYamlLinks(data);
             if (data instanceof Map) {
-                //noinspection Convert2streamapi
-                for (Object profileName : ((Map) data).keySet()) {
+                Map dataMap = (Map) data;
+                for (Object profileName : dataMap.keySet()) {
                     if (profileName instanceof String) {
                         configuration.addProfile(profileParser.read(
-                            ((String) profileName),
-                            (Map) ((Map) data).get(profileName)
+                            (String) profileName,
+                            (Map) dataMap.get(profileName)
                         ));
                     }
                 }

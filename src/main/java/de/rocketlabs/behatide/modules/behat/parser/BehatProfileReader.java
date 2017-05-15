@@ -2,6 +2,7 @@ package de.rocketlabs.behatide.modules.behat.parser;
 
 import com.google.inject.Inject;
 import de.rocketlabs.behatide.modules.behat.model.BehatProfile;
+import de.rocketlabs.behatide.modules.behat.model.BehatSuite;
 import de.rocketlabs.behatide.modules.behat.model.FilterType;
 
 import java.util.Map;
@@ -61,13 +62,13 @@ public final class BehatProfileReader {
     private void readAutoLoaderExtensionConfiguration(BehatProfile profile, Map profileData) {
         if (profileData.get("autoload") instanceof Map) {
             Map<?, ?> autoLoadData = (Map) profileData.get("autoload");
-            autoLoadData.values().stream()
-                .filter(value -> value instanceof String)
-                .forEach(value -> profile.addAutoLoadPath((String) value));
+            autoLoadData.entrySet().stream()
+                .filter(entry -> entry.getKey() instanceof String && entry.getValue() instanceof String)
+                .forEach(entry -> profile.addAutoLoadPath((String) entry.getKey(), (String) entry.getValue()));
         } else if (profileData.get("autoload") instanceof String) {
-            profile.addAutoLoadPath((String) profileData.get("autoload"));
+            profile.addAutoLoadPath("", (String) profileData.get("autoload"));
         } else {
-            profile.addAutoLoadPath(DEFAULT_AUTOLOAD_PATH);
+            profile.addAutoLoadPath("", DEFAULT_AUTOLOAD_PATH);
         }
     }
 
@@ -93,6 +94,10 @@ public final class BehatProfileReader {
                 assert key instanceof String;
                 profile.addSuite(suiteReader.readSuite((String) key, suites.get(key)));
             }
+        }
+
+        if (profile.getSuites().isEmpty()) {
+            profile.addSuite(BehatSuite.getDefaultSuite());
         }
     }
 }

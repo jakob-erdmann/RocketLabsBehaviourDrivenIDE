@@ -1,6 +1,7 @@
 package de.rocketlabs.behatide.modules.behat.model;
 
 import de.rocketlabs.behatide.domain.model.Suite;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -61,9 +62,15 @@ public class BehatSuite implements Suite {
     @Override
     public List<String> getDefinitionContainerIdentifiers() {
         if (!settings.containsKey("contexts")) {
-            return Collections.emptyList();
+            return Collections.singletonList("FeatureContext");
         }
         //noinspection unchecked
         return (List<String>) settings.get("contexts");
+    }
+
+    public static BehatSuite getDefaultSuite() {
+        BehatSuite suite = new BehatSuite("default");
+        suite.addSetting("paths", Collections.singletonList("%paths.base%/features"));
+        return suite;
     }
 }

@@ -8,10 +8,12 @@ import java.util.List;
 
 public class PhpClass implements DefinitionContainer {
 
+    private String namespace;
     private final String name;
     private final List<PhpFunction> members;
 
-    public PhpClass(String name, List<PhpFunction> members) {
+    public PhpClass(String namespace, String name, List<PhpFunction> members) {
+        this.namespace = namespace;
         this.name = name;
         this.members = members;
     }
@@ -26,5 +28,9 @@ public class PhpClass implements DefinitionContainer {
     @Override
     public String getName() {
         return name;
+    }
+
+    public String getNamespace() {
+        return namespace;
     }
 }

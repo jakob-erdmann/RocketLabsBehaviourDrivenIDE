@@ -294,7 +294,7 @@ PhpFile PhpFile() :
         (
             UseStatement() |
             <SLASH_STAR_COMMENT> |
-            LOOKAHEAD(2) cd = ClassDeclaration() { classes = add(classes, cd); } |
+            LOOKAHEAD(2) cd = ClassDeclaration(namespace) { classes = add(classes, cd); } |
             Statement()
         )*
 
@@ -323,7 +323,7 @@ String ClassPath() :
     { return ret; }
 }
 
-PhpClass ClassDeclaration() :
+PhpClass ClassDeclaration(String namespace) :
 {
     String className = null;
     List classMembers = null;
@@ -336,7 +336,7 @@ PhpClass ClassDeclaration() :
     [<IMPLEMENTS> <IDENTIFIER> ( "," <IDENTIFIER>) * ]
     classMembers = ClassMembers()
 
-    { return new PhpClass(className, classMembers); }
+    { return new PhpClass(namespace, className, classMembers); }
 }
 
 void EndOfStatement() : {}
@@ -500,7 +500,7 @@ void Statement() : {}
     LOOKAHEAD(2) NamespaceStatement() |
     LOOKAHEAD(2) UseStatement() |
     LOOKAHEAD(2) LabeledStatement() |
-    LOOKAHEAD(2) ClassDeclaration() |
+    LOOKAHEAD(2) ClassDeclaration("") |
     LOOKAHEAD(2) InterfaceDeclaration() |
     LOOKAHEAD(2) ExpressionStatement() |
     CompoundStatement() |

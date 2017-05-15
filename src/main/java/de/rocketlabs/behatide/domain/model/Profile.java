@@ -3,7 +3,7 @@ package de.rocketlabs.behatide.domain.model;
 import java.util.List;
 import java.util.Set;
 
-public interface Profile {
+public interface Profile<T extends Suite> {
 
     String getName();
 
@@ -13,7 +13,7 @@ public interface Profile {
 
     Set<String> getSuiteNames();
 
-    List<Suite> getSuites();
+    List<T> getSuites();
 
-    void addSuite(Suite suite);
+    void addSuite(T suite);
 }

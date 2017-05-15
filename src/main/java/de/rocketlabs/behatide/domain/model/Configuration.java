@@ -3,13 +3,13 @@ package de.rocketlabs.behatide.domain.model;
 import java.util.List;
 import java.util.Set;
 
-public interface Configuration {
+public interface Configuration<T extends Profile> {
 
-    Profile getProfile(String name);
+    T getProfile(String name);
 
     Set<String> getProfileNames();
 
-    List<Profile> getProfiles();
+    List<T> getProfiles();
 
-    void addProfile(Profile profile);
+    void addProfile(T profile);
 }
